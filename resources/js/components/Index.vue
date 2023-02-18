@@ -143,16 +143,17 @@ export default {
         }
       }
     },
-    printFlagment(flag){
+    printfragment(flag){
       return flag === ' ' ? '␣' : flag;
     },
     blur(){
       this.isTyping = false;
+    },
+    wrapFragments(){
+
     }
   }
 }
-
-
 </script>
 
 <template>
@@ -160,11 +161,16 @@ export default {
     <h1 class="my-3 sentence clearfix"
         :class="isTyping ? 'is-typing' : ''"
         @click="focusInput">
-      <span v-for="(item, i) in currentSentence.sentenceArray" class="fagment float-start" v-bind:class="[
-        (item.correct === false) ? 'error' : '',
-        (item.correct === true) ? 'success' : '',
-        (i == text.length) ? 'active' : '',
-      ]">{{ printFlagment(item.alphabet) }}</span>
+      <span v-for="(item, i) in currentSentence.sentenceArray"
+            class="fragment float-start"
+            ref="listItem"
+            :key="i"
+            :class="[
+              (item.correct === false) ? 'error' : '',
+              (item.correct === true) ? 'success' : '',
+              (i == text.length) ? 'active' : '',
+              `item_${i}`
+            ]">{{ printfragment(item.alphabet) }}</span>
     </h1>
     <div>
       <input type="text"
@@ -217,10 +223,10 @@ export default {
 .done{
   background: #f4f4f4;
 }
-.fagment{
+.fragment{
   position: relative;
 }
-.fagment.active:after{
+.fragment.active:after{
   content:'';
   display: block;
   position: absolute;
@@ -233,7 +239,7 @@ export default {
   animation: blink-effect 1s step-end infinite;
   display: none;
 }
-.sentence.is-typing .fagment.active:after{
+.sentence.is-typing .fragment.active:after{
   display: block;
 }
 </style>
