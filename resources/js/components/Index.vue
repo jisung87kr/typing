@@ -1,0 +1,167 @@
+<script>
+export default {
+  data() {
+    return {
+      text: [],
+      index: 0,
+      sentences: {},
+      currentSentence: {},
+      start: '',
+      end: '',
+      isFirst: true,
+      isLast: false,
+    }
+  },
+  mounted() {
+    // this.fetchItems();
+    this.sentences = [
+      {
+        "id" :1,
+        "sentence": 'hello world',
+      },
+      {
+        "id" :2,
+        "sentence": 'hello laravel',
+      }
+    ]
+    this.getCurrentSentence();
+    console.log(this.sentences);
+  },
+  methods:{
+    fetchItems(){
+      axios.get('http://localhost:5174/sentences').then(res => {
+        if(res.data){
+          this.sentences = res.data;
+          this.getCurrentSentence();
+        }
+      });
+    },
+    prev(){
+      this.isFirst = this.index - 1 < 0;
+
+      if(this.isFirst){
+        alert('처음입니다.');
+        return false;
+      }
+
+      this.index = this.isFirst ? 0 : this.index - 1;
+      console.log(`click prev find ${this.index}`);
+      this.getCurrentSentence();
+    },
+    next(){
+      this.isLast = this.sentences.length <= this.index;
+
+      if(this.isLast){
+        alert('마지막입니다.');
+        return false;
+      }
+
+      this.index = this.isLast ? this.sentences.length : this.index + 1;
+      console.log(`click next find ${this.index}`);
+      this.getCurrentSentence();
+    },
+    getCurrentSentence(){
+      // 초기화
+      if(this.currentSentence.sentence){
+        for (let i = 0; i < this.sentences.length; i++) {
+          if(this.sentences[i].id == this.currentSentence.id){
+
+            // 미입력된 항목 처리
+            for (let j = this.currentSentence.sentenceArray.length-1; j > 0; j--) {
+              if(this.text.length > j){
+                continue;
+              }
+              this.currentSentence.sentenceArray[j].correct = false;
+            }
+
+            this.sentences[i] = this.currentSentence;
+            this.sentences[i].done = true;
+          }
+        }
+      }
+
+      this.text = [];
+      console.log(this.sentences);
+
+      // 현재 아이템 조회
+      let item = this.sentences.filter( (item, i) => {
+        return i == this.index
+      });
+
+      // 데이터 준비
+      item[0].done = false;
+      item[0].sentenceArray = [];
+      for (let i = 0; i < item[0].sentence.length; i++) {
+        let alphabet = {
+          'alphabet': item[0].sentence[i],
+          'input': null,
+          'correct': null,
+        };
+        item[0].sentenceArray.push(alphabet);
+      }
+
+      this.currentSentence = item[0];
+    },
+    typing(){
+      const typingArray = this.text;
+      // 백스페이스입력시 값 초기화
+      if(event.key == 'Backspace'){
+        if(typingArray.length == 0){
+          for (let i = 0; i < this.currentSentence.sentenceArray.length; i++) {
+            this.currentSentence.sentenceArray[i].input = null;
+            this.currentSentence.sentenceArray[i].correct = null;
+          }
+        } else {
+          this.currentSentence.sentenceArray[typingArray.length].input = null;
+          this.currentSentence.sentenceArray[typingArray.length].correct = null;
+        }
+      }
+
+      // 문자가 일치하는지 체크
+      for(let i = 0; i < typingArray.length; i++){
+        this.currentSentence.sentenceArray[i].input = typingArray[i];
+        if(this.currentSentence.sentenceArray[i].alphabet != typingArray[i]){
+          this.currentSentence.sentenceArray[i].correct = false;
+        } else {
+          this.currentSentence.sentenceArray[i].correct = true;
+        }
+      }
+    }
+  }
+}
+
+
+</script>
+
+<template>
+  <div>
+    <div>
+      <span v-for="(item, i) in currentSentence.sentenceArray" v-bind:class="(item.correct === false) ? 'error' : ''">{{ item.alphabet }}</span>
+    </div>
+    <div>
+      <input type="text" v-model="text" @keyup="typing" @keyup.enter="next">
+      <div>
+        <input type="button" value="prev" @click="prev">
+        <input type="button" value="next" @click="next">
+      </div>
+    </div>
+    <ul>
+      <li v-for="item in this.sentences" v-bind:class="item.done ? 'done' : ''">
+        <span v-for="value in item.sentenceArray" v-if="item.done" v-bind:class="(value.correct === false) ? 'error' : ''">{{ value.alphabet }}</span>
+        <span v-for="value in item.sentence" v-if="!item.done">{{ value }}</span>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<style scoped>
+.error{
+  color: red;
+}
+.success{
+  color: green;
+}
+.done{
+  text-decoration: underline;
+}
+</style>
