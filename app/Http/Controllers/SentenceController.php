@@ -12,9 +12,9 @@ class SentenceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request)
     {
-        //
+        return $request->wantsJson() ? Sentence::all() : Sentence::all();
     }
 
     /**

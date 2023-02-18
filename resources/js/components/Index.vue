@@ -10,29 +10,19 @@ export default {
       end: '',
       isFirst: true,
       isLast: false,
+      isTyping: false,
     }
   },
   mounted() {
-    // this.fetchItems();
-    this.sentences = [
-      {
-        "id" :1,
-        "sentence": 'hello world',
-      },
-      {
-        "id" :2,
-        "sentence": 'hello laravel',
-      }
-    ]
-    this.getCurrentSentence();
-    console.log(this.sentences);
+    this.fetchItems();
   },
   methods:{
     fetchItems(){
-      axios.get('http://localhost:5174/sentences').then(res => {
+      axios.get('/api/sentences').then(res => {
         if(res.data){
           this.sentences = res.data;
           this.getCurrentSentence();
+          this.focusInput();
         }
       });
     },
@@ -45,7 +35,6 @@ export default {
       }
 
       this.index = this.isFirst ? 0 : this.index - 1;
-      console.log(`click prev find ${this.index}`);
       this.getCurrentSentence();
     },
     next(){
@@ -57,7 +46,6 @@ export default {
       }
 
       this.index = this.isLast ? this.sentences.length : this.index + 1;
-      console.log(`click next find ${this.index}`);
       this.getCurrentSentence();
     },
     getCurrentSentence(){
@@ -81,7 +69,6 @@ export default {
       }
 
       this.text = [];
-      console.log(this.sentences);
 
       // 현재 아이템 조회
       let item = this.sentences.filter( (item, i) => {
@@ -103,29 +90,41 @@ export default {
       this.currentSentence = item[0];
     },
     typing(){
-      const typingArray = this.text;
       // 백스페이스입력시 값 초기화
-      if(event.key == 'Backspace'){
-        if(typingArray.length == 0){
-          for (let i = 0; i < this.currentSentence.sentenceArray.length; i++) {
-            this.currentSentence.sentenceArray[i].input = null;
-            this.currentSentence.sentenceArray[i].correct = null;
-          }
-        } else {
-          this.currentSentence.sentenceArray[typingArray.length].input = null;
-          this.currentSentence.sentenceArray[typingArray.length].correct = null;
-        }
-      }
+      this.remove();
 
       // 문자가 일치하는지 체크
-      for(let i = 0; i < typingArray.length; i++){
-        this.currentSentence.sentenceArray[i].input = typingArray[i];
-        if(this.currentSentence.sentenceArray[i].alphabet != typingArray[i]){
+      for(let i = 0; i < this.text.length; i++){
+        this.currentSentence.sentenceArray[i].input = this.text[i];
+        if(this.currentSentence.sentenceArray[i].alphabet != this.currentSentence.sentenceArray[i].input){
           this.currentSentence.sentenceArray[i].correct = false;
         } else {
           this.currentSentence.sentenceArray[i].correct = true;
         }
       }
+    },
+    focusInput(){
+      this.$refs.input.focus();
+      this.isTyping = true;
+    },
+    remove(){
+      if(event.key == 'Backspace'){
+        if(this.text.length == 0){
+          for (let i = 0; i < this.currentSentence.sentenceArray.length; i++) {
+            this.currentSentence.sentenceArray[i].input = null;
+            this.currentSentence.sentenceArray[i].correct = null;
+          }
+        } else {
+          this.currentSentence.sentenceArray[this.text.length].input = null;
+          this.currentSentence.sentenceArray[this.text.length].correct = null;
+        }
+      }
+    },
+    printFlagment(flag){
+      return flag === ' ' ? '␣' : flag;
+    },
+    blur(){
+      this.isTyping = false;
     }
   }
 }
@@ -134,20 +133,33 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="container">
+    <h1 class="my-3 sentence clearfix"
+        :class="isTyping ? 'is-typing' : ''"
+        @click="focusInput">
+      <span v-for="(item, i) in currentSentence.sentenceArray" class="fagment float-start" v-bind:class="[
+        (item.correct === false) ? 'error' : '',
+        (item.correct === true) ? 'success' : '',
+        (i == text.length) ? 'active' : '',
+      ]">{{ printFlagment(item.alphabet) }}</span>
+    </h1>
     <div>
-      <span v-for="(item, i) in currentSentence.sentenceArray" v-bind:class="(item.correct === false) ? 'error' : ''">{{ item.alphabet }}</span>
-    </div>
-    <div>
-      <input type="text" v-model="text" @keyup="typing" @keyup.enter="next">
-      <div>
-        <input type="button" value="prev" @click="prev">
-        <input type="button" value="next" @click="next">
-      </div>
+      <input type="text"
+             v-model="text"
+             @keyup="typing"
+             @keydown="remove"
+             @keyup.enter="next"
+             @blur="blur"
+             class="form-control my-3 visually-hidden"
+             ref="input">
     </div>
     <ul>
-      <li v-for="item in this.sentences" v-bind:class="item.done ? 'done' : ''">
-        <span v-for="value in item.sentenceArray" v-if="item.done" v-bind:class="(value.correct === false) ? 'error' : ''">{{ value.alphabet }}</span>
+      <li v-for="item in this.sentences" v-bind:class="item.done ? 'done' : ''"
+        class="my-2">
+        <span v-for="value in item.sentenceArray" v-if="item.done" v-bind:class="[
+          (value.correct === false) ? 'error' : '',
+          (value.correct === true) ? 'success' : '',
+        ]">{{ value.alphabet }}</span>
         <span v-for="value in item.sentence" v-if="!item.done">{{ value }}</span>
       </li>
     </ul>
@@ -155,13 +167,41 @@ export default {
 </template>
 
 <style scoped>
+@keyframes blink-effect {
+  50% {
+    opacity: 0;
+  }
+}
+.sentence{
+  color: #a5a5a9;
+  cursor: pointer;
+}
 .error{
-  color: red;
+  color: #ff5a5a;
 }
 .success{
-  color: green;
+  color: #333;
 }
 .done{
   text-decoration: underline;
+}
+.fagment{
+  position: relative;
+}
+.fagment.active:after{
+  content:'';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #333;
+  transition: 0.5s;
+  animation: blink-effect 1s step-end infinite;
+  display: none;
+}
+.sentence.is-typing .fagment.active:after{
+  display: block;
 }
 </style>

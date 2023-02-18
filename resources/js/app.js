@@ -1,10 +1,8 @@
 import './bootstrap';
 import { createApp } from 'vue'
-import axios from "axios";
-import App from './App.vue'
-
-window.axios = axios;
+import App from './vue/App.vue'
+import '../sass/app.scss'
+import 'animate.css';
 
 const app = createApp(App)
-
 app.mount('#app')
