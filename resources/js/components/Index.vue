@@ -48,6 +48,25 @@ export default {
       this.index = this.isLast ? this.sentences.length : this.index + 1;
       this.getCurrentSentence();
     },
+    getTypingResult(currentSentence){
+      console.log(currentSentence);
+      let result = {
+        "length": currentSentence.sentenceArray.length,
+        "correct": null,
+        "wrong": null,
+        "perfect": null,
+      }
+      for (let i = 0; i < currentSentence.sentenceArray.length; i++) {
+        if(currentSentence.sentenceArray[i].alphabet === this.text[i]){
+          result.correct++;
+        } else {
+          result.wrong++;
+        }
+      }
+
+      result.perfect = result.correct == result.length ? true : false;
+      return result;
+    },
     getCurrentSentence(){
       // 초기화
       if(this.currentSentence.sentence){
@@ -64,6 +83,10 @@ export default {
 
             this.sentences[i] = this.currentSentence;
             this.sentences[i].done = true;
+            
+            // 
+            this.sentences[i].result = this.getTypingResult(this.sentences[i]);
+            console.log(this.sentences);
           }
         }
       }
@@ -153,14 +176,23 @@ export default {
              class="form-control my-3 visually-hidden"
              ref="input">
     </div>
-    <ul>
-      <li v-for="item in this.sentences" v-bind:class="item.done ? 'done' : ''"
-        class="my-2">
-        <span v-for="value in item.sentenceArray" v-if="item.done" v-bind:class="[
-          (value.correct === false) ? 'error' : '',
-          (value.correct === true) ? 'success' : '',
-        ]">{{ value.alphabet }}</span>
-        <span v-for="value in item.sentence" v-if="!item.done">{{ value }}</span>
+    <ul class="list-group">
+      <li v-for="(item, i) in this.sentences"
+          :class="[
+            item.done ? 'done' : '',
+            i === this.index ? 'active' : '',
+          ]"
+        class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <span v-for="value in item.sentenceArray" v-if="item.done" v-bind:class="[
+            (value.correct === false) ? 'error' : '',
+            (value.correct === true) ? 'success' : '',
+          ]">{{ value.alphabet }}</span>
+          <span v-for="value in item.sentence" v-if="!item.done">{{ value }}</span>
+        </div>
+        <span class="badge rounded-pill"
+              :class="item.result.perfect ? 'bg-primary' : 'bg-danger'"
+              v-if="item.done">{{ item.result.perfect ? 'pass' : 'fail' }}</span>
       </li>
     </ul>
   </div>
@@ -183,7 +215,7 @@ export default {
   color: #333;
 }
 .done{
-  text-decoration: underline;
+  background: #f4f4f4;
 }
 .fagment{
   position: relative;
