@@ -23,6 +23,7 @@ export default {
           this.sentences = res.data;
           this.getCurrentSentence();
           this.focusInput();
+          console.log(this.$refs.listItem);
         }
       });
     },
@@ -99,18 +100,21 @@ export default {
       });
 
       // 데이터 준비
-      item[0].done = false;
-      item[0].sentenceArray = [];
-      for (let i = 0; i < item[0].sentence.length; i++) {
+      this.currentSentence = this.makeFragments(item[0]);
+    },
+    makeFragments(item) {
+      item.done = false;
+      item.sentenceArray = [];
+      for (let i = 0; i < item.sentence.length; i++) {
         let alphabet = {
-          'alphabet': item[0].sentence[i],
+          'alphabet': item.sentence[i],
           'input': null,
           'correct': null,
         };
-        item[0].sentenceArray.push(alphabet);
+        item.sentenceArray.push(alphabet);
       }
 
-      this.currentSentence = item[0];
+      return item;
     },
     typing(){
       // 백스페이스입력시 값 초기화
