@@ -23,7 +23,6 @@ export default {
           this.sentences = res.data;
           this.getCurrentSentence();
           this.focusInput();
-          console.log(this.$refs.listItem);
         }
       });
     },
@@ -101,10 +100,45 @@ export default {
 
       // 데이터 준비
       this.currentSentence = this.makeFragments(item[0]);
+      console.log(this.sentences);
     },
     makeFragments(item) {
       item.done = false;
       item.sentenceArray = [];
+      item.words = [];
+
+      // 공백뒤에 '␣' 추가, 공백으로 문자열을 배열로 변환
+      let words = item.sentence.replace(/\s/g, ' ␣');
+      words = words.split(' ');
+      let prevWordLength = 0;
+
+      // 단어별로 그루핑 (표기용 정보)
+      for (let i = 0; i < words.length; i++) {
+        let word = {
+          'text': words[i],
+          'fragments': [],
+          'prevWordsLength': prevWordLength,
+        };
+
+        // 현재 문자의 인덱스 확인을 위해 이전 단어들의 길이의 합 저장
+        prevWordLength += words[i].length;
+
+        // 단어에 해당하는 문자 배열처리
+        for (let j = 0; j < word.text.length; j++) {
+          let alphabet = {
+            'alphabet': word.text[j],
+            'input': null,
+            'correct': null,
+          }
+          word.fragments.push(alphabet);
+        }
+
+        item.words.push(word);
+      }
+
+      // 실제로 문자열 비교하는 정보
+      // 데이터 비교는 item.sentenceArray
+      // 입력대상 출력문자는 item.words
       for (let i = 0; i < item.sentence.length; i++) {
         let alphabet = {
           'alphabet': item.sentence[i],
@@ -152,9 +186,6 @@ export default {
     },
     blur(){
       this.isTyping = false;
-    },
-    wrapFragments(){
-
     }
   }
 }
@@ -162,19 +193,21 @@ export default {
 
 <template>
   <div class="container">
-    <h1 class="my-3 sentence clearfix"
+    <h1 class="my-5 sentence clearfix"
         :class="isTyping ? 'is-typing' : ''"
         @click="focusInput">
-      <span v-for="(item, i) in currentSentence.sentenceArray"
-            class="fragment float-start"
-            ref="listItem"
-            :key="i"
-            :class="[
-              (item.correct === false) ? 'error' : '',
-              (item.correct === true) ? 'success' : '',
-              (i == text.length) ? 'active' : '',
-              `item_${i}`
-            ]">{{ printfragment(item.alphabet) }}</span>
+      <span v-for="(word, idx) in currentSentence.words" class="fragment_wrapper float-start clearfix">
+        <span v-for="(item, i) in word.fragments"
+              class="fragment float-start"
+              ref="listItem"
+              :key="i"
+              :class="[
+                (currentSentence.sentenceArray[i + word.prevWordsLength].correct === false) ? 'error' : '',
+                (currentSentence.sentenceArray[i + word.prevWordsLength].correct === true) ? 'success' : '',
+                (i + word.prevWordsLength == text.length) ? 'active' : '',
+                `item_${i}`
+              ]">{{ printfragment(item.alphabet) }}</span>
+      </span>
     </h1>
     <div>
       <input type="text"
@@ -217,6 +250,7 @@ export default {
 .sentence{
   color: #a5a5a9;
   cursor: pointer;
+  word-break: keep-all;
 }
 .error{
   color: #ff5a5a;
