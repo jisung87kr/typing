@@ -17,7 +17,8 @@ class SentenceFactory extends Factory
     public function definition(): array
     {
         return [
-            'sentence' => fake()->sentence()
+            'sentence' => fake()->sentence(),
+            'sentence_ko' => fake('ko_KR')->realText()
         ];
     }
 }

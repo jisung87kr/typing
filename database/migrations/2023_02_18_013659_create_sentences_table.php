@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sentences', function (Blueprint $table) {
             $table->id();
             $table->text('sentence');
+            $table->text('sentence_ko');
             $table->timestamps();
         });
     }

@@ -9,5 +9,5 @@ class Sentence extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['sentence'];
+    protected $fillable = ['sentence', 'sentence_ko'];
 }

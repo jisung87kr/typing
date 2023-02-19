@@ -232,6 +232,7 @@ export default {
             (value.correct === true) ? 'success' : '',
           ]">{{ value.alphabet }}</span>
           <span v-for="value in item.sentence" v-if="!item.done">{{ value }}</span>
+          <small class="d-block mt-3">"{{ item.sentence_ko }}"</small>
         </div>
         <span class="badge rounded-pill"
               :class="item.result.perfect ? 'bg-primary' : 'bg-danger'"
