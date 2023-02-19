@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.base')
 @section('content')
-    <div>content</div>
+    <x-typing></x-typing>
 @endsection
