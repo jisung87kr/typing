@@ -14,7 +14,7 @@ class SentenceController extends Controller
      */
     public function index(Request $request)
     {
-        return $request->wantsJson() ? Sentence::all() : Sentence::all();
+        return $request->wantsJson() ? Sentence::inRandomOrder()->limit(5)->get() : Sentence::inRandomOrder()->limit(5)->get();
     }
 
     /**
