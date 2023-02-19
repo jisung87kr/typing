@@ -221,6 +221,12 @@
         // 마지막 문장 입력 후 처리
         if(this.isLast){
           this.$refs.input.blur();
+          Swal.fire({
+            title: '완료',
+            text: '모든 항목을 완료했습니다.',
+            icon: 'success',
+            confirmButtonText: '확인'
+          })
           return false;
         }
 
