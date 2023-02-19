@@ -1,7 +1,7 @@
 <div id="typing">
     <div class="card my-5">
         <div class="card-body">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-auto">
                      현재속도 : @{{ wpm }}
                 </div>
@@ -10,6 +10,9 @@
                 </div>
                 <div class="col-auto">
                     진행 : @{{ index }} / @{{ sentences.length }}
+                </div>
+                <div class="col-auto">
+                    <input type="button" class="btn btn-secondary" value="새로고침" @click="reload">
                 </div>
             </div>
         </div>
@@ -138,6 +141,9 @@
           }
         });
       },
+      reload(){
+        window.location.reload();
+      },
       prev(){
         this.isFirst = this.index - 1 < 0;
 
@@ -155,18 +161,12 @@
         this.isFirstTyping = true;
         this.currentSentence.wpm = this.calculateTypingSpeed(this.currentSentence.started_at, this.currentSentence.finished_at);
         this.avgCalculateTypingSpeed();
+        this.isLast = this.sentences.length -1 <= this.index;
 
-        this.isLast = this.sentences.length <= this.index;
-
-        if(this.index == this.sentences.length -1 ){
+        // 마지막 문장인 경우
+        if(this.isLast){
           this.started_at = this.sentences[0].started_at;
           this.finished_at = this.currentSentence.finished_at;
-        }
-
-        if(this.isLast){
-          alert('마지막입니다.');
-          console.log(this.started_at, this.finished_at);
-          return false;
         }
 
         this.index = this.isLast ? this.sentences.length : this.index + 1;
@@ -217,6 +217,12 @@
         }
 
         this.text = [];
+
+        // 마지막 문장 입력 후 처리
+        if(this.isLast){
+          this.$refs.input.blur();
+          return false;
+        }
 
         // 현재 아이템 조회
         let item = this.sentences.filter( (item, i) => {
@@ -276,6 +282,11 @@
         return item;
       },
       typing(){
+        if(this.isLast){
+            this.$refs.input.blur();
+            return false;
+        }
+
         // 초과입력 방지
         if(this.text.length > this.currentSentence.sentenceArray.length){
           return false;
