@@ -4,7 +4,7 @@ import './bootstrap';
 import Swal from 'sweetalert2'
 import { createApp } from 'vue'
 import App from './vue/App.vue'
-import '../sass/app.scss'
+import '../sass/bootstrap.scss'
 import 'animate.css';
 
 window.$ = Jquery;

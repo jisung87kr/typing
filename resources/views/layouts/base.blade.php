@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>TYPING</title>
-    @vite(['resources/css/app.css', 'resources/js/typing.js'])
+    @vite(['resources/sass/bootstrap.scss', 'resources/js/typing.js'])
 </head>
 <body>
 @include('include.header')
