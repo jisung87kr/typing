@@ -12,14 +12,43 @@
     .sidebar a{
         color: #333;
     }
+
+    .nav-item{
+        font-size: 18px;
+    }
 </style>
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
     <div class="position-sticky pt-3 sidebar-sticky">
         <ul class="nav flex-column">
+            @if(!Auth::user())
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ route('login') }}">
+                        <i class="bi bi-person me-1"></i>
+                        로그인
+                    </a>
+                </li>
+            @else
+                <li class="nav-item" x-data="">
+                    <a class="nav-link active" aria-current="page" href="{{ route('logout') }}" @click.prevent="document.getElementById('logout').submit()">
+                        <form action="{{ route('logout') }}" method="POST" id="logout">
+                            @csrf
+                            @method('POST')
+                        </form>
+                        <i class="bi bi-person-slash me-1"></i>
+                        로그아웃
+                    </a>
+                </li>
+            @endif
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home align-text-bottom" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    home
+                    <i class="bi bi-house me-1"></i>
+                    홈
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">
+                    <i class="bi bi-gem me-1"></i>
+                    랭킹
                 </a>
             </li>
         </ul>
