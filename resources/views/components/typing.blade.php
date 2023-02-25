@@ -141,6 +141,35 @@
           }
         });
       },
+      storeSentence(sentence){
+        var input = '';
+        for (let i = 0; i < sentence.sentenceArray.length; i++) {
+          if(sentence.sentenceArray[i].input){
+            input += sentence.sentenceArray[i].input;
+          }
+        }
+
+        var data = {
+            id: sentence.id,
+            input: sentence.sentenceArray.length,
+            length: sentence.result.length,
+            correct: sentence.result.correct ? sentence.result.correct : 0,
+            wrong: sentence.result.wrong ? sentence.result.wrong : 0,
+            perfect: sentence.result.perfect,
+            started_at: sentence.started_at,
+            finished_at: sentence.finished_at,
+            wpm: sentence.wpm,
+            difftime: sentence.difftime,
+            sentenceArray: sentence.sentenceArray,
+            input: input
+        };
+
+        console.log(data);
+
+        axios.post('/sentence-user', data).then(res => {
+            console.log(res);
+        });
+      },
       reload(){
         window.location.reload();
       },
@@ -211,6 +240,9 @@
 
               //
               this.sentences[i].result = this.getTypingResult(this.sentences[i]);
+
+              // 입력데이터 전송
+              this.storeSentence(this.sentences[i]);
               console.log(this.sentences);
             }
           }

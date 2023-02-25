@@ -2,18 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\Sentence;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SentenceSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Sentence::factory(10)->create();
+        User::factory(10)->create();
+        User::factory()->create([
+            'name' => 'jisung87kr',
+            'email' => 'jisung87kr@gmail.com',
+        ]);
     }
 }

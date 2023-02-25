@@ -41,4 +41,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function sentences()
+    {
+        return $this->belongsToMany(Sentence::class)->withPivot('id', 'input', 'length', 'correct', 'wrong', 'perfect', 'started_at', 'finished_at', 'wpm', 'created_at', 'updated_at');
+    }
 }

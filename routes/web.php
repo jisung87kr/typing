@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SentenceUserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SentenceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +16,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function(){
     return view('home');
-});
+})->name('home');
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+Route::get('/rank', function(){
+    return view('rank');
+})->name('rank');
+
+Route::get('/user', function(){
+    return view('user');
+})->name('user');
+
+Route::resource('/sentence-user', SentenceUserController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

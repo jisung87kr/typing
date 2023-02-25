@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sentence;
+use App\Models\SentenceUserMeta;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class SentenceController extends Controller
+class SentenceUserMetaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(): Response
     {
-        return $request->wantsJson() ? Sentence::inRandomOrder()->limit(20)->get() : Sentence::inRandomOrder()->limit(20)->get();
+        //
     }
 
     /**
@@ -36,7 +36,7 @@ class SentenceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sentence $sentence): Response
+    public function show(SentenceUserMeta $sentenceUserMeta): Response
     {
         //
     }
@@ -44,7 +44,7 @@ class SentenceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Sentence $sentence): Response
+    public function edit(SentenceUserMeta $sentenceUserMeta): Response
     {
         //
     }
@@ -52,7 +52,7 @@ class SentenceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sentence $sentence): RedirectResponse
+    public function update(Request $request, SentenceUserMeta $sentenceUserMeta): RedirectResponse
     {
         //
     }
@@ -60,7 +60,7 @@ class SentenceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sentence $sentence): RedirectResponse
+    public function destroy(SentenceUserMeta $sentenceUserMeta): RedirectResponse
     {
         //
     }

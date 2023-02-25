@@ -4,6 +4,7 @@
         padding-bottom: 0.75rem;
         background-color: rgba(0, 0, 0, .25);
         box-shadow: inset -1px 0 0 rgb(0 0 0 / 25%);
+        padding-left: 30px !important;
     }
 
     .navbar .navbar-toggler {

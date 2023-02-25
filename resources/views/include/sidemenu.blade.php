@@ -16,20 +16,24 @@
     .nav-item{
         font-size: 18px;
     }
+
+    .nav-link.active{
+        color: var(--bs-nav-link-hover-color);
+    }
 </style>
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
     <div class="position-sticky pt-3 sidebar-sticky">
         <ul class="nav flex-column">
             @if(!Auth::user())
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{ route('login') }}">
+                    <a class="nav-link" aria-current="page" href="{{ route('login') }}">
                         <i class="bi bi-person me-1"></i>
                         로그인
                     </a>
                 </li>
             @else
                 <li class="nav-item" x-data="">
-                    <a class="nav-link active" aria-current="page" href="{{ route('logout') }}" @click.prevent="document.getElementById('logout').submit()">
+                    <a class="nav-link" aria-current="page" href="{{ route('logout') }}" @click.prevent="document.getElementById('logout').submit()">
                         <form action="{{ route('logout') }}" method="POST" id="logout">
                             @csrf
                             @method('POST')
@@ -40,15 +44,21 @@
                 </li>
             @endif
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link @if(request()->routeIs('home')) active @endif" aria-current="page" href="{{ route('home') }}">
                     <i class="bi bi-house me-1"></i>
                     홈
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link @if(request()->routeIs('rank')) active @endif" aria-current="page" href="{{ route('rank') }}">
                     <i class="bi bi-gem me-1"></i>
                     랭킹
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @if(request()->routeIs('user')) active @endif" aria-current="page" href="{{ route('user') }}">
+                    <i class="bi bi-speedometer2"></i>
+                    프로필
                 </a>
             </li>
         </ul>
