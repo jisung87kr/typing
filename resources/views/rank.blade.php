@@ -6,17 +6,21 @@
             <tr>
                 <th>#</th>
                 <th>아이디</th>
-                <th>스피드</th>
-                <th>문항수</th>
+                <th>최고 스피드</th>
+                <th>평균 스피드</th>
+                <th>총 문항수</th>
             </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>1</td>
-            <td>jisung87kr@gmail.com</td>
-            <td>30 WPM</td>
-            <td>1,000</td>
-        </tr>
+        @foreach($users as $user)
+            <tr>
+                <td>{{ $loop->index + 1 }}</td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->max_wpm }} WPM</td>
+                <td>{{ number_format($user->avg_wpm) }} WPM</td>
+                <td>{{ number_format($user->sentence_cnt) }}</td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 @endsection

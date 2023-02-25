@@ -23,6 +23,7 @@ return new class extends Migration
             $table->timestamp('started_at');
             $table->timestamp('finished_at');
             $table->integer('wpm');
+            $table->integer('usetime');
             $table->integer('difftime');
             $table->timestamps();
         });

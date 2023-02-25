@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\SentenceUser;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SentenceUserController extends Controller
@@ -13,40 +15,22 @@ class SentenceUserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        DB::enableQueryLog();
-        $sentenceUser = SentenceUser::where('user_id', '11')
-            ->where('sentence_id', '1')
-            ->limit(1)->first();
-        $sentenceUser->sentenceUserMetas()->createMany([
-           [
-               'alphabet' => '1',
-               'input' => '1',
-               'correct' => true,
-           ],
-           [
-               'alphabet' => '1',
-               'input' => '1',
-               'correct' => true,
-           ]
-        ]);
-        $query = DB::getQueryLog();
+        $users = User::select('*')
+            ->addSelect(DB::raw("(SELECT MAX(wpm) FROM sentence_user WHERE user_id = users.id) AS max_wpm"))
+            ->addSelect(DB::raw("(SELECT AVG(wpm) FROM sentence_user WHERE user_id = users.id) AS avg_wpm"))
+            ->addSelect(DB::raw("(SELECT COUNT(*) FROM sentence_user WHERE user_id = users.id) AS sentence_cnt"))
+            ->having('sentence_cnt', '>', 0)
+            ->orderBy('sentence_cnt', 'desc')
+            ->get();
+        return view('rank', compact('users'));
+    }
 
-//        dd(SentenceUser::first());
-//        $item = $request->user()->sentences()->first();
-//        dd($item->pivot->users);
-
-//        dd(SentenceUser::first()->users);
-//        $result = DB::select("SELECT * FROM sentence_user");
-//        dd($result);
-//        $item = $request->user()->sentences()->orderByPivot('id', 'desc')->first();
-//        dd($item->pivot->user);
-//        $item->pivot->sentenceUserMetas()->create([
-//           'alphabet' => 'q',
-//           'input' => 'q',
-//        ]);
-
+    public function user()
+    {
+        $user = Auth::User() ? Auth::User() : new User;
+        return view('user', compact('user'));
     }
 
     /**
@@ -78,6 +62,7 @@ class SentenceUserController extends Controller
         $validate['finished_at'] = date('Y-m-d H:i:s', strtotime($validate['finished_at']));
         $validate['created_at'] = date('Y-m-d H:i:s');
         $validate['updated_at'] = $validate['created_at'];
+        $validate['usetime'] = round(abs(strtotime($validate['finished_at']) - strtotime($validate['started_at'])),2);
 
         $request->user()->sentences()->attach($request->input('id'), $validate);
 

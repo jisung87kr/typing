@@ -18,6 +18,7 @@ class SentenceUser extends Pivot
         'started_at',
         'finished_at',
         'wpm',
+        'usetime',
         'difftime',
     ];
 

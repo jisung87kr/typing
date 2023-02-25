@@ -20,13 +20,9 @@ Route::get('/', function(){
     return view('home');
 })->name('home');
 
-Route::get('/rank', function(){
-    return view('rank');
-})->name('rank');
+Route::get('/rank', [SentenceUserController::class, 'index'])->name('rank');
+Route::get('/user', [SentenceUserController::class, 'user'])->name('user');
 
-Route::get('/user', function(){
-    return view('user');
-})->name('user');
 
 Route::resource('/sentence-user', SentenceUserController::class);
 
