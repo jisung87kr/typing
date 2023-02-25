@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     <div>전체시간</div>
-                    <h3 class="mt-2">{{ gmdate('H:i:s', $user->used_time) }}</h3>
+                    <h3 class="mt-2">@if($user->used_time){{ gmdate('H:i:s', $user->used_time) }}@else --:--:-- @endif</h3>
                 </div>
             </div>
         </div>
@@ -37,17 +37,15 @@
             </div>
         </div>
     </div>
+    @if($user->name)
     <div>
         <h1 class="my-5">출석일</h1>
         <ul class="list-group mt-3">
-            <li class="list-group-item">2023-01-01 00:00:00</li>
-            <li class="list-group-item">2023-01-01 00:00:00</li>
-            <li class="list-group-item">2023-01-01 00:00:00</li>
-            <li class="list-group-item">2023-01-01 00:00:00</li>
-            <li class="list-group-item">2023-01-01 00:00:00</li>
-            <li class="list-group-item">2023-01-01 00:00:00</li>
-            <li class="list-group-item">2023-01-01 00:00:00</li>
+            @foreach($user->logins as $login)
+            <li class="list-group-item">{{ $login->created_at }}</li>
+            @endforeach
         </ul>
     </div>
+    @endif
 
 @endsection
