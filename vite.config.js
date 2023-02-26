@@ -1,14 +1,14 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
         laravel({
             input: [
-               'resources/sass/bootstrap.scss',
-               'resources/css/app.css',
-               'resources/js/app.js',
+              'resources/sass/app.scss',
+              'resources/js/app.js',
                'resources/js/typing.js',
             ],
             refresh: true,
@@ -32,4 +32,9 @@ export default defineConfig({
             },
         }),
     ],
+    resolve: {
+        alias: {
+            '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
+        }
+    },
 });
