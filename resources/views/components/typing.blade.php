@@ -17,22 +17,27 @@
             </div>
         </div>
     </div>
-    <h1 class="my-5 sentence clearfix"
-        :class="isTyping ? 'is-typing' : ''"
-        @click="focusInput">
-      <span v-for="(word, idx) in currentSentence.words" class="fragment_wrapper float-start clearfix">
-        <span v-for="(item, i) in word.fragments"
-              class="fragment float-start"
-              ref="listItem"
-              :key="i"
-              :class="[
-                (currentSentence.sentenceArray[i + word.prevWordsLength].correct === false) ? 'error' : '',
-                (currentSentence.sentenceArray[i + word.prevWordsLength].correct === true) ? 'success' : '',
-                (i + word.prevWordsLength == text.length) ? 'active' : '',
-                `item_${i}`
-              ]">@{{ printfragment(item.alphabet) }}</span>
-      </span>
-    </h1>
+    <div class="my-5">
+        <h1 class="sentence clearfix"
+            :class="isTyping ? 'is-typing' : ''"
+            @click="focusInput">
+          <span v-for="(word, idx) in currentSentence.words" class="fragment_wrapper float-start clearfix">
+            <span v-for="(item, i) in word.fragments"
+                  class="fragment float-start"
+                  ref="listItem"
+                  :key="i"
+                  :class="[
+                    (currentSentence.sentenceArray[i + word.prevWordsLength].correct === false) ? 'error' : '',
+                    (currentSentence.sentenceArray[i + word.prevWordsLength].correct === true) ? 'success' : '',
+                    (i + word.prevWordsLength == text.length) ? 'active' : '',
+                    `item_${i}`
+                  ]">@{{ printfragment(item.alphabet) }}</span>
+          </span>
+        </h1>
+        <h2 class="text-muted" v-show="currentSentence.sentence_ko">
+            @{{ currentSentence.sentence_ko }}
+        </h2>
+    </div>
     <div>
         <input type="text"
                v-model="text"
@@ -257,8 +262,14 @@
             title: '완료',
             text: '모든 항목을 완료했습니다.',
             icon: 'success',
-            confirmButtonText: '확인'
-          })
+            showCancelButton: true,
+            confirmButtonText: '다시 하기',
+            cancelButtonText: '닫기',
+          }).then(result => {
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
+          });
           return false;
         }
 
