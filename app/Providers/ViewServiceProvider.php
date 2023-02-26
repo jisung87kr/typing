@@ -21,6 +21,10 @@ class ViewServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        View::composer('*', function($view){
+            View::share('view_name', $view->getName());
+        });
+
         View::composer('admin.*', function($view) {
             $menus = config('menu')['admin_menu'];
             $view->with('menus', $menus);
@@ -28,6 +32,11 @@ class ViewServiceProvider extends ServiceProvider
 
         $usrMenu = collect(config('menu')['menu'])->pluck('viewName')->toArray();
         View::composer($usrMenu, function($view) {
+            $menus = config('menu')['menu'];
+            $view->with('menus', $menus);
+        });
+
+        View::composer('auth.profile', function($view) {
             $menus = config('menu')['menu'];
             $view->with('menus', $menus);
         });

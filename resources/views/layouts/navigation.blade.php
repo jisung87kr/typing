@@ -3,6 +3,7 @@
         <div class="navbar navbar-light">
             <div class="container-xl">
                 <ul class="navbar-nav">
+                    @isset($menus)
                     @foreach($menus as $menu)
                         <li class="nav-item @if(request()->routeIs($menu['routeName'])) active @endif">
                             <a class="nav-link" href="{{ route($menu['routeName']) }}" >
@@ -13,6 +14,7 @@
                             </a>
                         </li>
                     @endforeach
+                    @endisset
                 </ul>
             </div>
         </div>

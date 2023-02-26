@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', '타이핑 연습') }}</title>
 
     @vite('resources/sass/app.scss')
 </head>
@@ -15,7 +15,8 @@
         <div class="container-tight py-4">
             <div class="text-center mb-4">
                 <a href="{{ config('app.url') }}" class="navbar-brand navbar-brand-autodark">
-                    <img src="{{ url('img/logo.svg') }}" height="36" alt="" />
+{{--                    <img src="{{ url('img/logo.svg') }}" height="36" alt="" />--}}
+                    타이핑 연습
                 </a>
             </div>
 

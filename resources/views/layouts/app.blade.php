@@ -38,12 +38,12 @@
 								</div>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-								<a href="{{ route('profile.show') }}" class="dropdown-item">{{ __('Profile') }}</a>
+								<a href="{{ route('profile.show') }}" class="dropdown-item">프로필</a>
 								<div class="dropdown-divider"></div>
 								<form method="POST" action="{{ route('logout') }}">
 									@csrf
 									<a href="{{ route('logout') }}" class="dropdown-item" onclick="event.preventDefault(); this.closest('form').submit();">
-										{{ __('Log Out') }}
+										로그아웃
 									</a>
 								</form>
 							</div>
