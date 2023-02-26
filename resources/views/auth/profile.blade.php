@@ -78,18 +78,42 @@
 
                 </div>
 
-                <div class="card-footer d-flex justify-content-between">
+                <div class="card-footer d-flex justify-content-between" x-data="{ open: false }">
                     <button type="submit" class="btn btn-primary">저장</button>
-                    <button type="button" class="btn btn-danger" x-data="" @click.prevent="deleteUser">계정 삭제</button>
-                    <script>
-                        function deleteUser(){
-                          axios.delete('/profile').then(function(res){
-                            console.log(res);
-                          });
-                        }
-                    </script>
                 </div>
             </form>
+
+            <h1 class="mt-5 mb-2">계정 삭제</h1>
+            <form action="{{ route('profile.destroy') }}" method="POST" class="card" autocomplete="off">
+                @csrf
+                @method('DELETE')
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+                        <label class="form-label required">{{ __('password') }}</label>
+                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('password') }}">
+                    </div>
+                    @error('password')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+
+                    <div class="mb-3">
+                        <label class="form-label required">{{ __('password confirmation') }}</label>
+                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="{{ __('password confirmation') }}" autocomplete="new-password">
+                    </div>
+                    @error('password_confirmation')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+
+                </div>
+
+                <div class="card-footer d-flex justify-content-between">
+                    <button type="submit" class="btn btn-danger">계정삭제</button>
+                </div>
+            </form>
+
+
         </div>
     </div>
 

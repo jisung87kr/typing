@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sentence_user', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sentence_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('input');
             $table->integer('length');
             $table->integer('correct');
