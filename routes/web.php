@@ -55,7 +55,6 @@ Route::middleware(['auth', 'verified', 'admin'])
            return view('admin.index');
         })->name('index');
 
-        Route::get('/sentences', function(){
-            return view('admin.sentences');
-        })->name('sentences');
+        Route::resource('/sentences', SentenceController::class)->except('adminIndex');
+        Route::get('/sentences', [SentenceController::class, 'adminIndex'])->name('sentences');
     });

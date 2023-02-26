@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        hello
+        123
     </div>
 @endsection
