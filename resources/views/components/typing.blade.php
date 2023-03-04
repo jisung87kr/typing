@@ -1,5 +1,42 @@
 <div id="typing">
-    <div class="card my-5">
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="row gy-3 mb-3">
+                <div class="col-2">
+                    카테고리
+                </div>
+                <div class="col-10">
+                    <select name="category"
+                            id="category"
+                            v-model="category_id"
+                            class="form-select"
+                            @change="fetchItems">
+                        <option :value="0">전체</option>
+                        <option v-for="category in categories"
+                                :key="category.id"
+                                :value="category.id">@{{ category.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    문항수
+                </div>
+                <div class="col-10">
+                    <select name="limit"
+                            id="limit"
+                            v-model="limit"
+                            class="form-select"
+                            @change="fetchItems">
+                        <option v-for="(limitItem, idx) in limitArray"
+                                :key="idx"
+                                :value="limitItem">@{{ limitItem }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-5">
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-auto">
@@ -131,6 +168,10 @@
         finished_at: null,
         wpm: 0,
         avgWpm: 0,
+        category_id: 0,
+        categories: [],
+        limit: 30,
+        limitArray: [10, 20, 30, 40, 50],
       }
     },
     mounted() {
@@ -138,9 +179,15 @@
     },
     methods:{
       fetchItems(){
-        axios.get('/api/sentences').then(res => {
+        axios.get('/api/sentences', {
+          params: {
+            category_id: this.category_id,
+            limit: this.limit,
+          }
+        }).then(res => {
           if(res.data){
-            this.sentences = res.data;
+            this.sentences = res.data.sentences;
+            this.categories = res.data.categories;
             this.getCurrentSentence();
             this.focusInput();
           }

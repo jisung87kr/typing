@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Sentence;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,12 +15,21 @@ class SentenceController extends Controller
      */
     public function index(Request $request)
     {
-        return $request->wantsJson() ? Sentence::inRandomOrder()->limit(20)->get() : Sentence::inRandomOrder()->limit(20)->get();
+        $filters = request(['category_id']);
+        $filters['limit'] = $request->input('limit') ? $request->input('limit') : 20;
+        $sentences = Sentence::filter($filters)->inRandomOrder()->get();
+        $categories = Category::all();
+        $data = [
+            'sentences' => $sentences,
+            'categories' => $categories,
+        ];
+        return $request->wantsJson() ? $data : $data;
     }
 
     public function adminIndex(Request $request)
     {
-        $sentences = Sentence::paginate(30);
+        $filters = request(['category_id']);
+        $sentences = Sentence::filter($filters)->paginate(30);
         return view('admin.sentence.index', compact('sentences'));
     }
 
