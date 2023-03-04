@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Notifications\CustomResetPassword;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -33,7 +35,10 @@ class PasswordResetLinkController extends Controller
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
         $status = Password::sendResetLink(
-            $request->only('email')
+            $request->only('email'),
+            function($user, $token){
+                $user->notify(new CustomResetPassword($token));
+            }
         );
 
         return $status == Password::RESET_LINK_SENT

@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 @section('content')
     <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        비밀번호를 잊어 버렸습니까? 괜찮아요. 이메일 주소를 알려주시면 새 비밀번호를 선택할 수 있는 비밀번호 재설정 링크를 이메일로 보내드립니다.
+        비밀번호를 잊어 버렸습니까? 이메일 주소를 알려주시면 새 비밀번호를 선택할 수 있는 비밀번호 재설정 링크를 이메일로 보내드립니다.
     </div>
 
     <!-- Session Status -->
